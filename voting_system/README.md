@@ -3,6 +3,6 @@
 # Stack
 - Python
   - Brownie 
-- Solidity 
+- Solidity >=0.8.10 <0.9.0;
 - Metamsk
 - Infura
