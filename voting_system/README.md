@@ -3,7 +3,6 @@
 # Stack
 - Python
   - Brownie 
-- Solidity  
-  - OpenZeppelin
+- Solidity 
 - Metamsk
 - Infura
