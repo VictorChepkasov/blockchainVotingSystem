@@ -1,4 +1,5 @@
-# Ethereum blockchain voting system/ Powered by Solidity(Ethereum) and Brownie
+# Ethereum blockchain voting system  
+Powered by Solidity(Ethereum) and Brownie
 
 # Stack
 - Python
