@@ -6,91 +6,99 @@ contract VotingSystem {
         string title;
         address creator;
         uint id;
-        uint dateOfStart;
-        uint dateOfEnd;
-        uint timestamp; 
-        uint countOfVoters;
-        uint countOfChoices;
+        uint votes; //кол-во голосов во всём опросе
+        uint contestants; //кол-во человек, за которых голосуют
+        uint countOfVoters; //кол-во голосующих
+        uint dateOfStart; //дата начала голосования
+        uint dateOfEnd; //дата конца голосования
+        uint timestamp; //дата создания голосования
         bool opened; //открыто ли голосование?
     }
 
+    // Эта структура участника голосования, он может быть кандидатом, или просто голосующим
     struct VoterInfo {
         address voter;
-        uint vote;
         bool voted;
-    }
-
-    // Голосование может иметь больше одного варианата выбора.
-    // Каждый вариант имеет название, свой id, благодаря которому 
-    // будут присваиваться голоса, и кол-во голосов.
-    struct ChoiceInfo {
-        string title;
         uint id;
-        uint votes;
+        uint votes;  //кол-во голосов
+        address[] voters; //адреса тех, кто проголосовал
     }
 
-    ChoiceInfo[] choices;
-    PollInfo[] polls;
+    PollInfo public poll;
 
-    mapping(address => VoterInfo) voters;
-    mapping(address => bool) voted;
-    mapping(address => ChoiceInfo) voteChoiceArr;
+    mapping(address => VoterInfo) voters; //адресса всех участников голосования
+    mapping(uint => mapping(address => bool)) voted; //проголосовавщие
+    mapping(uint => VoterInfo[]) contestants; //ребята за которых голосуют
 
-    constructor(){}
-
-    function createPoll(
-        string memory title,
+    // Poll functions
+    constructor(string memory title,
         uint dateOfStart,
-        uint dateOfEnd,
-        uint totalCountOfChoices,
-        string[] memory titles
-    ) public {
+        uint dateOfEnd
+    ) {
         require(bytes(title).length > 0, "Title can't be empty!");
-        require(dateOfStart > 0 && dateOfEnd > dateOfStart, "End must be greater than start!");
-
-        PollInfo memory poll;
+        require(dateOfStart > 0 && dateOfEnd > dateOfStart, "End must be greater than start!");        
 
         poll.title = title;
         poll.creator = msg.sender;
         poll.dateOfStart = dateOfStart;
         poll.dateOfEnd = dateOfEnd;
         poll.timestamp = block.timestamp;
-        poll.countOfVoters = 0;
-        poll.countOfChoices = 0;
-        poll.opened = false; 
-
-        for(uint i = 0; i<totalCountOfChoices+1; i++) {
-            _createChoice(titles[i], i);
-            poll.countOfChoices++;
-        }       
-   }
-
-    function _createChoice(string memory title, uint countOfChoices) private {
-        ChoiceInfo memory choice;
-
-        choice.title = title;
-        choice.id = countOfChoices++;
-        choices.push(choice);
+        poll.opened = false;
+        // poll.id = как-то реализуем;
     }
 
-    function vote(uint id, address voter, uint vote_id) public {
-        require(voters[msg.sender].voted != true, "Already voted!");
-        require(polls[id].opened != true, "Polling already ended!");
-        require(polls[id].dateOfEnd > polls[id].dateOfStart, "End date must be greater than start date");
+    function updatePoll(string memory title,
+        uint dateOfStart,
+        uint dateOfEnd
+    ) public OnlyCreator {
+        require(poll.opened == false, "");
+        require(bytes(title).length == 0, "Title can't be empty!");
+        require(dateOfEnd > dateOfStart, "End must be greater than start!");
 
-        // тут функционал для отдавания голоса какому-то из вариантов
+        poll.title = title;
+        poll.dateOfStart = dateOfStart;
+        poll.dateOfEnd = dateOfEnd;
     }
 
-    function getPoll(uint id) public view returns (PollInfo memory) {
-        return polls[id];
+    function deletePoll() internal OnlyCreator {
+        poll.opened = false;
     }
 
-    function getVoter(address voter) public view returns(VoterInfo memory) {
-        return voters[voter];
+    function getPoll() public returns(PollInfo memory) {
+        return poll;
     }
 
-    modifier OnlyVoter() {
+    // Voter functions
+    function createVoter() public {
+        VoterInfo memory voter;
+
+        voter.id = poll.countOfVoters++;
+        voter.voter = msg.sender;
+    }
+
+    function vote(uint id, uint vote_id) public onlyVoter {
+        require(!voters[msg.sender].voted, "We already voted!");
+        require(poll.opened = true, "Voting hasn't started yet!");
+        require(poll.dateOfEnd > poll.dateOfStart, "End must be greater than start!");
+
+        voted[id][msg.sender] = true;
+        //я так понял что voter = contestants[id][vote_id], не сильно понимаю почему, но вот так вот
+        contestants[id][vote_id].votes++; //прибавление голосов кандидату
+        contestants[id][vote_id].voters.push(msg.sender); //добавление адреса участника голосовани кандидату 
+        poll.votes++;
+    }
+
+    function listContestants(uint id) public returns(VoterInfo[] memory) {
+        return contestants[id];
+    }
+
+    modifier onlyVoter() {
         msg.sender == voters[msg.sender].voter;
+        _;
+    }
+
+    modifier OnlyCreator() {
+        msg.sender == poll.creator;
         _;
     }
 }
