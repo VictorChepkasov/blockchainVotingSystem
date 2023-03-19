@@ -64,7 +64,7 @@ contract VotingSystem {
         poll.opened = false;
     }
 
-    function getPoll() public returns(PollInfo memory) {
+    function getPoll() public view returns(PollInfo memory) {
         return poll;
     }
 
