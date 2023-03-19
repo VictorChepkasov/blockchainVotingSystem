@@ -86,11 +86,15 @@ contract VotingSystem {
         contestants[id][vote_id].votes++; //прибавление голосов кандидату
         contestants[id][vote_id].voters.push(msg.sender); //добавление адреса участника голосовани кандидату 
         poll.votes++;
+
+        emit Voted(msg.sender, block.timestamp);
     }
 
     function listContestants(uint id) public returns(VoterInfo[] memory) {
         return contestants[id];
     }
+
+    event Voted(address indexed voter, uint timestamp);
 
     modifier onlyVoter() {
         msg.sender == voters[msg.sender].voter;
