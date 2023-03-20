@@ -33,7 +33,7 @@ contract VotingSystem {
     // Poll functions
     constructor(string memory title,
         uint dateOfStart,
-        uint dateOfEnd
+        uint dateOfEnd, uint id
     ) {
         require(bytes(title).length > 0, "Title can't be empty!");
         require(dateOfStart > 0 && dateOfEnd > dateOfStart, "End must be greater than start!");        
@@ -44,7 +44,9 @@ contract VotingSystem {
         poll.dateOfEnd = dateOfEnd;
         poll.timestamp = block.timestamp;
         poll.opened = false;
-        // poll.id = как-то реализуем;
+        poll.id = id;
+
+        emit createVoting(msg.sender, title, block.timestamp);
     }
 
     function updatePoll(string memory title,
@@ -60,7 +62,7 @@ contract VotingSystem {
         poll.dateOfEnd = dateOfEnd;
     }
 
-    function deletePoll() internal OnlyCreator {
+    function deletePoll() public OnlyCreator {
         poll.opened = false;
     }
 
@@ -94,6 +96,7 @@ contract VotingSystem {
         return contestants[id];
     }
 
+    event createVoting(address indexed creator, string title, uint timestamp);
     event Voted(address indexed voter, uint timestamp);
 
     modifier onlyVoter() {
