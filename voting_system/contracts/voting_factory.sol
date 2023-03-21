@@ -3,7 +3,7 @@ pragma solidity >=0.8.10 <0.9.0;
 
 import "./voting_system.sol";
 
-contract Factory {
+contract VotingFactory {
     uint counter;
     address votingSystemAddress;
 
