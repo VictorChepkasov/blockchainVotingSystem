@@ -1,25 +1,30 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.10 <0.9.0;
 
-import "./voting_system.sol";
+import "./votingSystem.sol";
 
 contract VotingFactory {
-    uint counter;
-    address votingSystemAddress;
+    uint public counter;
+    // address votingSystemAddress;
 
     VotingSystem[] public VotingSystemArr;
-    VotingSystem votingSystem = VotingSystem(votingSystemAddress);
+    VotingSystem votingSystem = VotingSystem(msg.sender);
 
-    constructor(address votingSystem) {
-        votingSystemAddress = votingSystem;
-    }
+    // constructor(address votingSystem) {
+    //     votingSystemAddress = votingSystem;
+    // }
 
     function createNewVoting(string memory title,
         uint dateOfStart,
         uint dateOfEnd
-    ) public {
-        VotingSystem poll = new VotingSystem(title, dateOfStart, dateOfEnd, ++counter);
-        VotingSystemArr.push(poll);
+    ) public returns(VotingSystem newContract) {
+        counter++;
+        VotingSystem newContract = new VotingSystem(title, dateOfStart, dateOfEnd, 4);
+        VotingSystemArr.push(newContract);
+
+        // address addressContract = address(newContract);
+
+        return newContract;
     }
 
     function callUpdatePoll(

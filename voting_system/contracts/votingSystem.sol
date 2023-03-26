@@ -36,15 +36,16 @@ contract VotingSystem {
         uint dateOfEnd, uint id
     ) {
         require(bytes(title).length > 0, "Title can't be empty!");
-        require(dateOfStart > 0 && dateOfEnd > dateOfStart, "End must be greater than start!");        
+        require(dateOfStart > 0 && dateOfEnd > dateOfStart, "End must be greater than start!");
+        require(id > 0, "id = 0");    
 
+        poll.id = id;
         poll.title = title;
         poll.creator = msg.sender;
         poll.dateOfStart = dateOfStart;
         poll.dateOfEnd = dateOfEnd;
         poll.timestamp = block.timestamp;
         poll.opened = false;
-        poll.id = id;
 
         emit createVoting(msg.sender, title, block.timestamp);
     }
