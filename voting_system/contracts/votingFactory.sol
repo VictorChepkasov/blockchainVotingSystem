@@ -19,7 +19,7 @@ contract VotingFactory {
         uint dateOfEnd
     ) public returns(VotingSystem newContract) {
         counter++;
-        VotingSystem newContract = new VotingSystem(title, dateOfStart, dateOfEnd, 4);
+        VotingSystem newContract = new VotingSystem(title, dateOfStart, dateOfEnd, counter);
         VotingSystemArr.push(newContract);
 
         // address addressContract = address(newContract);
