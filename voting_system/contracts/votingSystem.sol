@@ -108,7 +108,7 @@ contract VotingSystem {
         emit Voted(msg.sender, block.timestamp);
     }
         
-    function listContestants(uint contestantId) public returns(VoterInfo[] memory) {
+    function listContestants(uint contestantId) public view returns(VoterInfo[] memory) {
         return contestants[contestantId];
     }
 
