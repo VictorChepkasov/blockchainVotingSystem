@@ -63,7 +63,7 @@ contract VotingSystem {
         uint dateOfEnd, uint pollId
     ) public OnlyCreator(pollId) {
         require(!polls[pollId].closed, "");
-        require(bytes(title).length == 0, "Title can't be empty!");
+        require(bytes(title).length > 0, "Title can't be empty!");
         require(dateOfEnd > dateOfStart, "End must be greater than start!");
 
         polls[pollId].title = title;
