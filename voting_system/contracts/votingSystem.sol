@@ -61,8 +61,8 @@ contract VotingSystem {
     function updatePoll(string memory title,
         uint dateOfStart,
         uint dateOfEnd, uint pollId
-    ) public OnlyCreator(pollId) {
-        require(!polls[pollId].closed, "");
+    ) public onlyCreator(pollId) {
+        require(!polls[pollId].closed, "Poll closed");
         require(bytes(title).length > 0, "Title can't be empty!");
         require(dateOfEnd > dateOfStart, "End must be greater than start!");
 
@@ -71,7 +71,7 @@ contract VotingSystem {
         polls[pollId].dateOfEnd = dateOfEnd;
     }
 
-    function deletePoll(uint pollId) public OnlyCreator(pollId) {
+    function deletePoll(uint pollId) public onlyCreator(pollId) {
         require(pollExist[pollId] == true, "Poll not found!");
         polls[pollId].closed = true;
     }
@@ -91,6 +91,16 @@ contract VotingSystem {
         voter.id = countOfUsers++;
         voter.voter = msg.sender;
         voters[msg.sender] = voter;
+    }
+
+    function contest(uint pollId) public onlyVoter {
+        require(pollExist[pollId], "Poll not found!");
+        require(!contested[pollId][msg.sender], "We already contested!");
+
+        VoterInfo memory contestant = voters[msg.sender];
+        contestants[pollId].push(contestant);
+        contested[pollId][msg.sender] = true;
+        polls[pollId].contestants++;
     }
 
     function vote(uint pollId, uint contestantId) public onlyVoter {
@@ -116,12 +126,12 @@ contract VotingSystem {
     event Voted(address indexed voter, uint timestamp);
 
     modifier onlyVoter() {
-        msg.sender == voters[msg.sender].voter;
+        require(msg.sender == voters[msg.sender].voter, "Only voter!");
         _;
     }
 
-    modifier OnlyCreator(uint pollId) {
-        msg.sender == polls[pollId].creator;
+    modifier onlyCreator(uint pollId) {
+        require(msg.sender == polls[pollId].creator, "Only creator!");
         _;
     }
 }

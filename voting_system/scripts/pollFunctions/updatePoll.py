@@ -1,7 +1,7 @@
 from brownie import VotingSystem, accounts
 
 def main():
-    updatePoll("TEST_updatePoll", 10, 30, 1)
+    updatePoll("TEST_updatePoll", 10, 30, 2)
 
 def updatePoll(title, dateOfStart, dateOfEnd, pollId):
     print(title, dateOfStart, dateOfEnd, pollId)
