@@ -4,10 +4,11 @@ def main():
     registerVoter()
 
 def registerVoter():
-    creator = accounts.load('victor')
-    deployedContract = VotingSystem[-1]
+    creator = accounts[0]
+    # deployedContract = VotingSystem[-1]
+    deployedContract = VotingSystem.deploy({'from': creator, 'priority_fee': '1 wei'})
 
     voter = deployedContract.registerVoter({'from': creator, 'priority_fee': '1 wei'})
-    print('Register voter finish!')
+    print(f'Register voter finish!')
 
     return voter
