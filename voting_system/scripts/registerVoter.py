@@ -8,5 +8,6 @@ def registerVoter():
     deployedContract = VotingSystem[-1]
 
     voter = deployedContract.registerVoter({'from': creator, 'priority_fee': '1 wei'})
+    print('Register voter finish!')
 
     return voter

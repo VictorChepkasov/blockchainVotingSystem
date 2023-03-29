@@ -1,7 +1,7 @@
 from brownie import VotingSystem
 
 def main():
-    getPoll(2) # посмотрим на данные второго опроса
+    getPoll(0) # посмотрим на данные второго опроса
 
 def getPoll(pollId):
     deployedContract = VotingSystem[-1]

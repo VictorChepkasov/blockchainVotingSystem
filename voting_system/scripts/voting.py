@@ -1,7 +1,7 @@
 from brownie import VotingSystem, accounts
 
 def main():
-    vote(1, 0)
+    vote(0, 0)
 
 def vote(pollId, contestantId):
     voter = accounts.load('victor')

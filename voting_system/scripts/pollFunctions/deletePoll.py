@@ -1,7 +1,7 @@
 from brownie import VotingSystem, accounts
 
 def main():
-    deletePoll(2)
+    deletePoll(0)
 
 def deletePoll(pollId):
     creator = accounts.load('victor')
