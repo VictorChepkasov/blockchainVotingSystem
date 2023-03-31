@@ -6,5 +6,5 @@ Voting system for fair elections. Thanks to it, people will have a service that 
 - Python
   - Brownie 
 - Solidity >=0.8.10 <0.9.0;
-- Metamsk
+- Metamask
 - Infura
