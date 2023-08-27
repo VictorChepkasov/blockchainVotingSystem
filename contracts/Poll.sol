@@ -86,11 +86,21 @@ contract Poll {
         poll.dateOfStart = block.timestamp;
     }
 
-    function endContest() public onlyCreator {
+    function endContest() public onlyCreator returns (address) {
         require(block.timestamp > poll.dateOfEnd, "Voting hasn't ended!");
         poll.exist = false;
-        // определение победителя голосования
-        // winner = адресс участника с наибольшим количеством голосов
+        uint winnerVotes = 0; 
+        address winnerAddress;
+
+        for(uint i = 0; i < contestantsAddresses.length; i++){
+            if(contestantsVotes[contestantsAddresses[i]] > winnerVotes) {
+                winnerVotes = contestantsVotes[contestantsAddresses[i]];
+                winnerAddress = contestantsAddresses[i];
+            } 
+        }
+
+        winner = winnerAddress;
+        return winner;
     }
 
     function updateTitle(string memory _title) public onlyCreator {
