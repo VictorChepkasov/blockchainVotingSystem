@@ -67,7 +67,7 @@ contract Poll {
         voted[_voterId] = false;
     }
 
-    function addContestant(uint _contestantId, address _contestant) external {
+    function addContestant(uint _contestantId, address _contestant) external onlyCreator {
         require(invited[_contestantId], "Contestant don't invited!");
         require(contestants[_contestantId] == address(0), "Contestant exist!");
         contestants[_contestantId] = _contestant;
@@ -75,7 +75,7 @@ contract Poll {
         contestantsVotes[_contestant] = 0;
     }
 
-    function startContest(uint _dateOfEnd) public {
+    function startContest(uint _dateOfEnd) public onlyCreator {
         require(
             _dateOfEnd > poll.dateOfStart && _dateOfEnd > block.timestamp,
             "Incorrect date of end!"
@@ -97,7 +97,7 @@ contract Poll {
         poll.title = _title;
     }
 
-    function deletePoll() public {
+    function deletePoll() public onlyCreator {
         require(poll.exist == true, "Poll not exist!");
         poll.exist = false;
     }
