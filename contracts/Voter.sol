@@ -21,7 +21,9 @@ contract Voter {
         _;
     }
 
-    constructor (address _voterAddress, uint _voterId) {
+    constructor () {}
+
+    function init(address _voterAddress, uint _voterId) external {
         voter.voter = _voterAddress;
         voter.id = _voterId;
     }

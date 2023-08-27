@@ -30,7 +30,9 @@ contract Poll {
         _;
     }
 
-    constructor(address _creator, string memory _title, uint _pollId) {
+    constructor() {}
+
+    function init(address _creator, string memory _title, uint _pollId) external {
         poll.creator = _creator;
         poll.title = _title;
         poll.id = _pollId;
@@ -80,6 +82,7 @@ contract Poll {
             _dateOfEnd > poll.dateOfStart && _dateOfEnd > block.timestamp,
             "Incorrect date of end!"
         );
+        poll.dateOfEnd = _dateOfEnd;
         poll.dateOfStart = block.timestamp;
     }
 

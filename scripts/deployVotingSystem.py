@@ -1,19 +1,28 @@
-from brownie import VotingSystem, accounts
+from brownie import VotingSystem, Poll, Voter, accounts
 from dotenv import load_dotenv
-from brownie.network.contract import Contract
 
 load_dotenv()
 
 def main():
-    deployedContract = deployVotingSystem()
-    print(f'deployed success! Deployed: {deployedContract}')
+    deployVotingSystem(accounts[0])
 
-def deployVotingSystem():
-    account = accounts.load('victor')
-    votingContract = VotingSystem.deploy({
-        'from': account,
-        'priority_fee': '1 wei'
+def deployVotingSystem(_from):
+    pollMasterContract = Poll.deploy({
+        'from': _from,
+        'priority_fee': '10 wei'
     })
-    print(f'votingSystem contract deployed at {votingContract}')
+    print(f'Poll master-contract deployed successful!')
 
-    return votingContract
+    voterMasterContract = Voter.deploy({
+        'from': _from,
+        'priority_fee': '10 wei'
+    })
+    print(f'Voter master-contract deployed successful!')
+
+    deployedVotingSystem = VotingSystem.deploy(pollMasterContract, voterMasterContract, {
+        'from': _from,
+        'priority_fee': '10 wei'
+    })
+    print(f'Voting system deployed successful!')
+    
+    return deployedVotingSystem
