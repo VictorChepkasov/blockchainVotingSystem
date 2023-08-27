@@ -15,13 +15,13 @@ contract Poll {
         uint dateOfEnd;
         bool exist;
     }
-    mapping(uint => address) public voters;
-    mapping(uint => bool) voted;
 
-    mapping(uint => bool) invited;
-    mapping(uint => address) contestants;
-    mapping(address => uint) contestantsVotes;
-    address[] contestantsAddresses;
+    mapping(uint => address) public voters;
+    mapping(uint => bool) public voted;
+    mapping(uint => bool) public invited;
+    mapping(uint => address) public contestants;
+    mapping(address => uint) public contestantsVotes;
+    address[] public contestantsAddresses;
 
     PollInfo public poll;
 
@@ -53,6 +53,16 @@ contract Poll {
 
     function inviteContestant(uint contestantId) external {
         invited[contestantId] = true;
+    }
+
+    function vote(uint _voterId, uint _contestantId) external {
+        voted[_voterId] = true;
+        contestantsVotes[contestants[_contestantId]]++;
+    }
+
+    function joinPoll(uint _voterId, address _voter) external {
+        voters[_voterId] = _voter;
+        voted[_voterId] = false;
     }
 
     function addContestant(uint _contestantId, address _contestant) external {
