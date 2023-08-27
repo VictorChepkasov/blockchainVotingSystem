@@ -3,7 +3,7 @@ pragma solidity >=0.8.10 <0.9.0;
 
 import "./Voter.sol";
 
-// cloneFactory
+// cloneFactory для голосований и пользователей
 
 contract VotingSystem {
     uint public countOfPolls;
