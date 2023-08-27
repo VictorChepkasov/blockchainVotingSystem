@@ -10,7 +10,10 @@ def main():
 
 def deployVotingSystem():
     account = accounts.load('victor')
-    votingContract = VotingSystem.deploy({'from': account, 'priority_fee': '1 wei'})
-    print(f'votingSystem contract deployed at {votingContract}, type: {type(votingContract)}')
+    votingContract = VotingSystem.deploy({
+        'from': account,
+        'priority_fee': '1 wei'
+    })
+    print(f'votingSystem contract deployed at {votingContract}')
 
     return votingContract
