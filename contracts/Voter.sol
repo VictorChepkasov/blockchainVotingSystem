@@ -21,8 +21,8 @@ contract Voter {
         _;
     }
 
-    constructor (uint _voterId) {
-        voter.voter = msg.sender;
+    constructor (address _voterAddress, uint _voterId) {
+        voter.voter = _voterAddress;
         voter.id = _voterId;
     }
 
@@ -39,7 +39,7 @@ contract Voter {
     function setInviteContestant(Poll poll) public onlyExistedVoter {
         require(poll.invited(voter.id), "Only invited!");
         require(
-            poll.contestants(voter.id) == address(0), 
+            poll.contestants(voter.id) != address(0), 
             "You have already accepted the invitation!"
         );
         Poll.PollInfo memory pollInfo = poll.getPollInfo();
@@ -52,7 +52,6 @@ contract Voter {
         require(pollInfo.exist, "Poll not found!");
         require(!poll.voted(voter.id), "We already voted!");
         require(pollInfo.dateOfStart > 0, "Voting hasn't started yet!");
-
         poll.vote(voter.id, contestantId);
 
         emit Voted(msg.sender, contestantId, block.timestamp);

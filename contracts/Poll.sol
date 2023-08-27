@@ -17,9 +17,9 @@ contract Poll {
     }
 
     mapping(uint => address) public voters;
-    mapping(uint => bool) public voted;
-    mapping(uint => bool) public invited;
     mapping(uint => address) public contestants;
+    mapping(uint => bool) public voted;
+    mapping(uint => bool) public invited; // приглашённые пользователи(true)
     mapping(address => uint) public contestantsVotes;
     address[] public contestantsAddresses;
 
@@ -30,8 +30,8 @@ contract Poll {
         _;
     }
 
-    constructor(string memory _title, uint _pollId) {
-        poll.creator = msg.sender;
+    constructor(address _creator, string memory _title, uint _pollId) {
+        poll.creator = _creator;
         poll.title = _title;
         poll.id = _pollId;
         poll.dateOfCreated = block.timestamp;
@@ -43,19 +43,21 @@ contract Poll {
         return poll;
     }
 
-    function getContestant(uint contestantId) external view returns(address) {
-        return contestants[contestantId];
+    function getContestant(uint _contestantId) external view returns(address) {
+        return contestants[_contestantId];
     }
 
-    function getVoters(uint voterId) external view returns(address) {
-        return voters[voterId];
+    function getVoter(uint _voterId) external view returns(address) {
+        return voters[_voterId];
     }
 
-    function inviteContestant(uint contestantId) external {
-        invited[contestantId] = true;
+    function inviteContestant(uint _contestantId) external {
+        invited[_contestantId] = true;
     }
 
     function vote(uint _voterId, uint _contestantId) external {
+        require(voters[_voterId] != address(0), "Voter don't exist!");
+        require(voted[_voterId], "You are voted!");
         voted[_voterId] = true;
         contestantsVotes[contestants[_contestantId]]++;
     }
@@ -67,6 +69,7 @@ contract Poll {
 
     function addContestant(uint _contestantId, address _contestant) external {
         require(invited[_contestantId], "Contestant don't invited!");
+        require(contestants[_contestantId] == address(0), "Contestant exist!");
         contestants[_contestantId] = _contestant;
         contestantsAddresses.push(_contestant);
         contestantsVotes[_contestant] = 0;
@@ -81,15 +84,13 @@ contract Poll {
     }
 
     function endContest() public onlyCreator {
+        require(block.timestamp > poll.dateOfEnd, "Voting hasn't ended!");
         poll.exist = false;
+        // определение победителя голосования
         // winner = адресс участника с наибольшим количеством голосов
     }
 
-    function updateTitle(
-        string memory _title
-    )
-        public onlyCreator
-    {
+    function updateTitle(string memory _title) public onlyCreator {
         require(poll.dateOfStart > 0, "Poll started!");
         require(!poll.exist, "Poll exist!");
         require(bytes(_title).length > 0, "Title can't be empty!");
