@@ -35,8 +35,9 @@ contract VotingSystem {
 
     function createPoll(string memory title) public {
         require(bytes(title).length > 0, "Title can't be empty!");
-        Poll poll = new Poll(msg.sender, title, countOfPolls++);
-        polls[poll.getPollInfo().id] = poll;
+        uint pollId = countOfPolls++;
+        Poll poll = new Poll(msg.sender, title, pollId);
+        polls[pollId] = poll;
 
         emit CreatePoll(msg.sender, title, block.timestamp);
     }
