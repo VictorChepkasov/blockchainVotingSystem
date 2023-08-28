@@ -3,6 +3,7 @@ pragma solidity >=0.8.10 <0.9.0;
 
 import "./Voter.sol";
 
+// clone factory copy-pasted by github.com/optionality
 contract CloneFactory {
     function createClone(address target) internal returns (address result) {
         bytes20 targetBytes = bytes20(target);
@@ -40,6 +41,7 @@ contract VotingSystem is CloneFactory {
     uint public countOfUsers;
 
     mapping(uint => Voter) voters; //адресса всех пользователей
+    mapping(address => bool) voterCreated; // для проверки на наличие
     mapping(uint => Poll) polls; //все голосования 
     
     event CreatePoll(address indexed creator, string title, uint dateOfCreate);
@@ -58,8 +60,10 @@ contract VotingSystem is CloneFactory {
         return voters[voterId];
     }
 
-    function createVoter() public {
-        uint voterId = countOfUsers++;
+    function createVoter() public returns(uint voterId) {
+        require(!voterCreated[msg.sender], "Voter created!");
+        voterCreated[msg.sender] = true;
+        voterId = ++countOfUsers;
         Voter voter = Voter(createClone(voterMasterContract));
         voter.init(msg.sender, voterId);
         voters[voterId] = voter;
@@ -67,9 +71,9 @@ contract VotingSystem is CloneFactory {
         emit CreateVoter(msg.sender, voterId, block.timestamp);
     }
 
-    function createPoll(string memory title) public {
+    function createPoll(string memory title) public returns(uint pollId) {
         require(bytes(title).length > 0, "Title can't be empty!");
-        uint pollId = countOfPolls++;
+        pollId = ++countOfPolls;
         Poll poll = Poll(createClone(pollMasterContract));
         poll.init(msg.sender, title, pollId);
         polls[pollId] = poll;

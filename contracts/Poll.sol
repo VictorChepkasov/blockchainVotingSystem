@@ -37,7 +37,6 @@ contract Poll {
         poll.title = _title;
         poll.id = _pollId;
         poll.dateOfCreated = block.timestamp;
-        poll.dateOfStart = 0;
         poll.exist = true;
     }
 

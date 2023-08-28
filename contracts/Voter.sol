@@ -26,9 +26,10 @@ contract Voter {
     function init(address _voterAddress, uint _voterId) external {
         voter.voter = _voterAddress;
         voter.id = _voterId;
+        voter.exist = true;
     }
 
-    function getVoter() external view returns(VoterInfo memory) {
+    function getVoterInfo() external view returns(VoterInfo memory) {
         return voter;
     }
 
