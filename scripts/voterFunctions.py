@@ -6,6 +6,10 @@ def getVoterInfo(_from, voter):
     print(f'Voter info: {voterInfo}')
     return voterInfo
 
+def joinPoll(_from, voter, poll):
+    voter.joinPoll(poll, _params(_from))
+    print('Voter joined!')
+
 def setInviteContestant(_from, voter, poll):
     voter.setInviteContestant(poll, _params(_from))
-
+    print('Invite saved, add new contestant!')

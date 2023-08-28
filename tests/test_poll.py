@@ -7,7 +7,7 @@ from scripts.pollFunctions import (
     getVoter,
     inviteContestant
 )
-from scripts.voterFunctions import setInviteContestant
+from scripts.voterFunctions import setInviteContestant, joinPoll
 from scripts.VotingSystemFunctions import getPoll, getVoter, createVoter
 
 def test_getContestant(votingSystemContract):
@@ -23,6 +23,22 @@ def test_getContestant(votingSystemContract):
 
     contestantAddress = getContestant(contestantAccount, contestantId, poll)
     contestantVotes = poll.contestantsVotes(contestantAddress)
-    
+
     assert contestantAddress == contestantAccount
     assert contestantVotes == 0
+
+def test_getVoter(votingSystemContract):
+    creatorAccount = accounts[0]
+    voterAccount = accounts[1]
+    voterId = createVoter(voterAccount)
+    title = 'Steel commanders'
+    pollId = VotingSystem[-1].createPoll(title, _params(creatorAccount)).return_value
+    poll = getPoll(creatorAccount, pollId)
+
+    joinPoll(voterAccount, getVoter(voterAccount, voterId), poll)
+
+    voterAddress = poll.voters(voterId)
+    voted = poll.voted(voterId)
+
+    assert voterAddress == voterAccount
+    assert voted == True

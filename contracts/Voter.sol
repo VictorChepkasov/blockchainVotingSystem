@@ -35,7 +35,7 @@ contract Voter {
 
     function joinPoll(Poll poll) public onlyExistedVoter {
         Poll.PollInfo memory pollInfo = poll.getPollInfo();
-        require(pollInfo.dateOfStart > 0, "Poll started!");
+        require(pollInfo.dateOfStart == 0, "Poll started!");
         poll.joinPoll(voter.id, msg.sender);
     }
 
