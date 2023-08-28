@@ -76,7 +76,14 @@ contract Poll {
         contestantsVotes[_contestant] = 0;
     }
 
-    function startContest(uint _dateOfEnd) public onlyCreator {
+    function updateTitle(string memory _title) private onlyCreator {
+        require(poll.dateOfStart > 0, "Poll started!");
+        require(!poll.exist, "Poll exist!");
+        require(bytes(_title).length > 0, "Title can't be empty!");
+        poll.title = _title;
+    }
+
+    function startContest(uint _dateOfEnd) private onlyCreator {
         require(
             _dateOfEnd > poll.dateOfStart && _dateOfEnd > block.timestamp,
             "Incorrect date of end!"
@@ -85,7 +92,7 @@ contract Poll {
         poll.dateOfStart = block.timestamp;
     }
 
-    function endContest() public onlyCreator returns (address) {
+    function endContest() private onlyCreator returns (address) {
         require(block.timestamp > poll.dateOfEnd, "Voting hasn't ended!");
         poll.exist = false;
         uint winnerVotes = 0; 
@@ -102,14 +109,7 @@ contract Poll {
         return winner;
     }
 
-    function updateTitle(string memory _title) public onlyCreator {
-        require(poll.dateOfStart > 0, "Poll started!");
-        require(!poll.exist, "Poll exist!");
-        require(bytes(_title).length > 0, "Title can't be empty!");
-        poll.title = _title;
-    }
-
-    function deletePoll() public onlyCreator {
+    function deletePoll() private onlyCreator {
         require(poll.exist == true, "Poll not exist!");
         poll.exist = false;
     }
