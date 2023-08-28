@@ -17,3 +17,7 @@ def setInviteContestant(_from, voter, poll):
 def vote(_from, contestantId, voter, poll):
     voter.vote(poll, contestantId, _params(_from))
     print(f'Voter voted for contestant id:{contestantId}')
+
+def deleteVoter(_from, voter):
+    voter.deleteVoter(_params(_from))
+    print('Voter deleted!')
