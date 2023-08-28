@@ -1,4 +1,3 @@
-import pytest
 from .VotingSystemFunctions import _params
 
 def getPollInfo(_from, poll):

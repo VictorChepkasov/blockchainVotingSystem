@@ -68,7 +68,7 @@ contract Poll {
         voted[_voterId] = false;
     }
 
-    function addContestant(uint _contestantId, address _contestant) external onlyCreator {
+    function addContestant(uint _contestantId, address _contestant) external {
         require(invited[_contestantId], "Contestant don't invited!");
         require(contestants[_contestantId] == address(0), "Contestant exist!");
         contestants[_contestantId] = _contestant;

@@ -1,2 +1,0 @@
-from brownie import Voter
-

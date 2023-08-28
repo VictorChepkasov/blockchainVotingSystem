@@ -42,7 +42,7 @@ contract Voter {
     function setInviteContestant(Poll poll) public onlyExistedVoter {
         require(poll.invited(voter.id), "Only invited!");
         require(
-            poll.contestants(voter.id) != address(0), 
+            poll.contestants(voter.id) == address(0), 
             "You have already accepted the invitation!"
         );
         Poll.PollInfo memory pollInfo = poll.getPollInfo();
