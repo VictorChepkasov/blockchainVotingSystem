@@ -35,7 +35,7 @@ contract Voter {
 
     function joinPoll(Poll poll) public onlyExistedVoter {
         Poll.PollInfo memory pollInfo = poll.getPollInfo();
-        require(pollInfo.dateOfStart == 0, "Poll started!");
+        require(pollInfo.dateOfStart > 0, "Poll not started!");
         poll.joinPoll(voter.id, msg.sender);
     }
 
@@ -54,13 +54,12 @@ contract Voter {
         Poll.PollInfo memory pollInfo = poll.getPollInfo();
         require(pollInfo.exist, "Poll not found!");
         require(!poll.voted(voter.id), "We already voted!");
-        require(pollInfo.dateOfStart > 0, "Voting hasn't started yet!");
         poll.vote(voter.id, contestantId);
 
         emit Voted(msg.sender, contestantId, block.timestamp);
     }
 
     function deleteVoter() public onlyExistedVoter {
-        voter.exist = true;
+        voter.exist = false;
     }
 }

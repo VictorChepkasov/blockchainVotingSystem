@@ -9,7 +9,7 @@ contract Poll {
         string title;
         uint id;
         uint voters;
-        uint countOfContestants;
+        uint contestants;
         uint dateOfCreated;
         uint dateOfStart;
         uint dateOfEnd;
@@ -28,6 +28,20 @@ contract Poll {
     modifier onlyCreator() {
         require(msg.sender == poll.creator, "Only creator!");
         _;
+    }
+
+    modifier contestNotStart() {
+        require(poll.dateOfStart == 0, "Voting need doesn't start!");
+        _;
+    }
+
+    modifier contestUnderway() {
+        require(poll.dateOfStart > 0, "Voting need start!");
+        if (poll.dateOfEnd > block.timestamp) {
+            _;
+        } else {
+            endContest();
+        }
     }
 
     constructor() {}
@@ -52,38 +66,39 @@ contract Poll {
         return voters[_voterId];
     }
 
-    function inviteContestant(uint _contestantId) external {
+    function inviteContestant(uint _contestantId) external contestNotStart {
         invited[_contestantId] = true;
     }
 
-    function vote(uint _voterId, uint _contestantId) external {
+    function vote(uint _voterId, uint _contestantId) external contestUnderway {
         require(voters[_voterId] != address(0), "Voter don't exist!");
-        require(voted[_voterId], "You are voted!");
+        require(!voted[_voterId], "You're voted!");
         voted[_voterId] = true;
         contestantsVotes[contestants[_contestantId]]++;
     }
 
-    function joinPoll(uint _voterId, address _voter) external {
+    function joinPoll(uint _voterId, address _voter) external contestUnderway {
         voters[_voterId] = _voter;
         voted[_voterId] = false;
     }
 
-    function addContestant(uint _contestantId, address _contestant) external {
+    function addContestant(uint _contestantId, address _contestant) external contestNotStart {
         require(invited[_contestantId], "Contestant don't invited!");
         require(contestants[_contestantId] == address(0), "Contestant exist!");
+        require(voters[_contestantId] == address(0), "Contestant it's voter!");
         contestants[_contestantId] = _contestant;
         contestantsAddresses.push(_contestant);
         contestantsVotes[_contestant] = 0;
+        poll.contestants++;
     }
 
-    function updateTitle(string memory _title) private onlyCreator {
-        require(poll.dateOfStart > 0, "Poll started!");
-        require(!poll.exist, "Poll exist!");
+    function updateTitle(string memory _title) public onlyCreator contestNotStart {
+        require(poll.exist, "Poll don't exist!");
         require(bytes(_title).length > 0, "Title can't be empty!");
         poll.title = _title;
     }
 
-    function startContest(uint _dateOfEnd) private onlyCreator {
+    function startContest(uint _dateOfEnd) public onlyCreator contestNotStart {
         require(
             _dateOfEnd > poll.dateOfStart && _dateOfEnd > block.timestamp,
             "Incorrect date of end!"
@@ -92,7 +107,7 @@ contract Poll {
         poll.dateOfStart = block.timestamp;
     }
 
-    function endContest() private onlyCreator returns (address) {
+    function endContest() public returns(address) {
         require(block.timestamp > poll.dateOfEnd, "Voting hasn't ended!");
         poll.exist = false;
         uint winnerVotes = 0; 
@@ -109,7 +124,7 @@ contract Poll {
         return winner;
     }
 
-    function deletePoll() private onlyCreator {
+    function deletePoll() public onlyCreator contestUnderway {
         require(poll.exist == true, "Poll not exist!");
         poll.exist = false;
     }

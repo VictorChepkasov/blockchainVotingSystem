@@ -13,3 +13,7 @@ def joinPoll(_from, voter, poll):
 def setInviteContestant(_from, voter, poll):
     voter.setInviteContestant(poll, _params(_from))
     print('Invite saved, add new contestant!')
+
+def vote(_from, contestantId, voter, poll):
+    voter.vote(poll, contestantId, _params(_from))
+    print(f'Voter voted for contestant id:{contestantId}')

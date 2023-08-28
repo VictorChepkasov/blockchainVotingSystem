@@ -28,7 +28,7 @@ def startContest(_from, _dateOfEnd, poll):
     print(f'Voting start! End: {_dateOfEnd}')
 
 def endContest(_from, poll):
-    winnerAddress = poll.endContest(_params(_from))
+    winnerAddress = poll.endContest(_params(_from)).return_value
     print(f'Vinner: {winnerAddress}')
     return winnerAddress
 
