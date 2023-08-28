@@ -18,53 +18,53 @@ from scripts.VotingSystemFunctions import getPoll, getVoter, createVoter
 def randInt():
     return randint(5, 8)
 
-# def test_getContestant():
-#     creatorAccount = accounts[0]
-#     contestantAccount = accounts[1]
-#     contestantId = createVoter(contestantAccount)
-#     title = 'Beat it'
-#     pollId = VotingSystem[-1].createPoll(title, _params(creatorAccount)).return_value
-#     poll = getPoll(creatorAccount, pollId)
+def test_getContestant():
+    creatorAccount = accounts[0]
+    contestantAccount = accounts[1]
+    contestantId = createVoter(contestantAccount)
+    title = 'Beat it'
+    pollId = VotingSystem[-1].createPoll(title, _params(creatorAccount)).return_value
+    poll = getPoll(creatorAccount, pollId)
 
-#     inviteContestant(creatorAccount, contestantId, poll)
-#     setInviteContestant(contestantAccount, getVoter(contestantAccount, pollId), poll)
+    inviteContestant(creatorAccount, contestantId, poll)
+    setInviteContestant(contestantAccount, getVoter(contestantAccount, pollId), poll)
 
-#     contestantAddress = getContestant(contestantAccount, contestantId, poll)
-#     contestantVotes = poll.contestantsVotes(contestantAddress)
+    contestantAddress = getContestant(contestantAccount, contestantId, poll)
+    contestantVotes = poll.contestantsVotes(contestantAddress)
 
-#     assert contestantAddress == contestantAccount
-#     assert contestantVotes == 0
+    assert contestantAddress == contestantAccount
+    assert contestantVotes == 0
 
-# def test_getVoter():
-#     creatorAccount = accounts[0]
-#     voterAccount = accounts[1]
-#     voterId = createVoter(voterAccount)
-#     title = 'Steel commanders'
-#     pollId = VotingSystem[-1].createPoll(title, _params(creatorAccount)).return_value
-#     poll = getPoll(creatorAccount, pollId)
+def test_getVoter():
+    creatorAccount = accounts[0]
+    voterAccount = accounts[1]
+    voterId = createVoter(voterAccount)
+    title = 'Steel commanders'
+    pollId = VotingSystem[-1].createPoll(title, _params(creatorAccount)).return_value
+    poll = getPoll(creatorAccount, pollId)
 
-#     startContest(creatorAccount, chain.time()+86400, poll)
-#     joinPoll(voterAccount, getVoter(voterAccount, voterId), poll)
+    startContest(creatorAccount, chain.time()+86400, poll)
+    joinPoll(voterAccount, getVoter(voterAccount, voterId), poll)
 
-#     voterAddress = poll.voters(voterId)
-#     voted = poll.voted(voterId)
+    voterAddress = poll.voters(voterId)
+    voted = poll.voted(voterId)
 
-#     assert voterAddress == voterAccount
-#     assert voted == False
+    assert voterAddress == voterAccount
+    assert voted == False
 
-# @pytest.mark.parametrize('updatedTitle', ["Jägermeister", pytest.param("", marks=pytest.mark.xfail)])
-# def test_updateTitle(updatedTitle):
-#     creatorAccount = accounts[0]
-#     voterAccount = accounts[1]
-#     createVoter(voterAccount)
-#     title = 'Steel commanders'
-#     pollId = VotingSystem[-1].createPoll(title, _params(creatorAccount)).return_value
-#     poll = getPoll(creatorAccount, pollId)
+@pytest.mark.parametrize('updatedTitle', ["Jägermeister", pytest.param("", marks=pytest.mark.xfail)])
+def test_updateTitle(updatedTitle):
+    creatorAccount = accounts[0]
+    voterAccount = accounts[1]
+    createVoter(voterAccount)
+    title = 'Steel commanders'
+    pollId = VotingSystem[-1].createPoll(title, _params(creatorAccount)).return_value
+    poll = getPoll(creatorAccount, pollId)
     
-#     updateTitle(creatorAccount, updatedTitle, poll)
-#     pollInfoTitle = getPollInfo(creatorAccount, poll)[1]
+    updateTitle(creatorAccount, updatedTitle, poll)
+    pollInfoTitle = getPollInfo(creatorAccount, poll)[1]
 
-#     assert pollInfoTitle == updatedTitle
+    assert pollInfoTitle == updatedTitle
 
 def test_endContest():
     creatorAccount = accounts[0]
