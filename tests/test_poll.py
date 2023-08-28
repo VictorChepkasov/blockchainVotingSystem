@@ -74,7 +74,7 @@ def test_endContest():
 
     votersIds, contestantsIds = [], []
 
-    for j in range(5, 8):
+    for j in range(1, 4):
         contestantAccount = accounts[j]
         contestantId = createVoter(contestantAccount)
         inviteContestant(creatorAccount, contestantId, poll)
@@ -83,24 +83,19 @@ def test_endContest():
 
     startContest(creatorAccount, chain.time()+86400, poll)
 
-    for i in range(1, 5):
+    for i in range(4, 8):
         voterId = createVoter(accounts[i])
         votersIds.append(voterId)
         joinPoll(accounts[i], getVoter(accounts[i], voterId), poll)
 
-
-    for k in range(1, 5):
-        voter = getVoter(accounts[k], votersIds[k-1])
+    f = 0
+    for k in range(4, 8):
+        voter = getVoter(accounts[k], votersIds[f])
+        f += 1
         getVoterInfo(accounts[k], voter)
-        vote(accounts[k], randInt(), voter, poll)
+        vote(accounts[k], 2, voter, poll)
 
     chain.sleep(getPollInfo(creatorAccount, poll)[-2])
     winnerAddress = endContest(creatorAccount, poll)
 
-    contestantsVotes = []
-    for l in range(5, 8):
-        contestantsVotes.append(poll.contestantsVotes(poll.contestants(l)))
-
-    sorted(contestantsVotes)
-
-    assert winnerAddress == contestantsVotes[-1]
+    assert winnerAddress == accounts[2]
