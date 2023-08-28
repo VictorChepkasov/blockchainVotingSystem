@@ -41,7 +41,8 @@ contract VotingSystem is CloneFactory {
     uint public countOfUsers;
 
     mapping(uint => Voter) voters; //адресса всех пользователей
-    mapping(address => bool) voterCreated; // для проверки на наличие
+    // адрес пользователя => его айди. Для проверки и не только
+    mapping(address => uint) public voterCreated;
     mapping(uint => Poll) polls; //все голосования 
     
     event CreatePoll(address indexed creator, string title, uint dateOfCreate);
@@ -61,9 +62,9 @@ contract VotingSystem is CloneFactory {
     }
 
     function createVoter() public returns(uint voterId) {
-        require(!voterCreated[msg.sender], "Voter created!");
-        voterCreated[msg.sender] = true;
+        require(voterCreated[msg.sender] == 0, "Voter created!");
         voterId = ++countOfUsers;
+        voterCreated[msg.sender] = voterId;
         Voter voter = Voter(createClone(voterMasterContract));
         voter.init(msg.sender, voterId);
         voters[voterId] = voter;
