@@ -1,37 +1,42 @@
 from .VotingSystemFunctions import _params
 
-def getPollInfo(_from, poll):
-    pollInfo = poll.getPollInfo(_params(_from))
-    print(f'Poll info: {pollInfo}')
-    return pollInfo
+class Poll:
+    def __init__(self, _poll):
+        self.poll = _poll
+        self.pollCreatorAddress = _poll.getPollInfo()[0]
 
-def getContestant(_from, _contestantId, poll):
-    contestantAddress = poll.getContestant(_contestantId, _params(_from))
-    print(f'Contestant address: {contestantAddress}')
-    return contestantAddress
+    def getPollInfo(self):
+        pollInfo = self.poll.getPollInfo()
+        print(f'Poll info: {pollInfo}')
+        return pollInfo
 
-def getVoter(_from, _voterId, poll):
-    voterAddress = poll.getVoter(_voterId, _params(_from))
-    print(f'Voter address: {voterAddress}')
-    return voterAddress
+    def getContestant(self, _contestantId):
+        contestantAddress = self.poll.getContestant(_contestantId)
+        print(f'Contestant address: {contestantAddress}')
+        return contestantAddress
 
-def inviteContestant(_from, _contestantId, poll):
-    poll.inviteContestant(_contestantId, _params(_from))
-    print(f'{_contestantId} invited!')
+    def getVoter(self, _voterId):
+        voterAddress = self.poll.getVoter(_voterId)
+        print(f'Voter address: {voterAddress}')
+        return voterAddress
 
-def updateTitle(_from, _title, poll):
-    poll.updateTitle(_title, _params(_from))
-    print('Poll title updated!')
+    def inviteContestant(self, _contestantId):
+        self.poll.inviteContestant(_contestantId, _params(self.pollCreatorAddress))
+        print(f'{_contestantId} invited!')
 
-def startContest(_from, _dateOfEnd, poll):
-    poll.startContest(_dateOfEnd, _params(_from))
-    print(f'Voting start! End: {_dateOfEnd}')
+    def updateTitle(self, _title):
+        self.poll.updateTitle(_title, _params(self.pollCreatorAddress))
+        print('Poll title updated!')
 
-def endContest(_from, poll):
-    winnerAddress = poll.endContest(_params(_from)).return_value
-    print(f'Vinner: {winnerAddress}')
-    return winnerAddress
+    def startContest(self, _dateOfEnd):
+        self.poll.startContest(_dateOfEnd, _params(self.pollCreatorAddress))
+        print(f'Voting start! End: {_dateOfEnd}')
 
-def deletePoll(_from, poll):
-    poll.deletePoll(_params(_from))
-    print('Poll deleted!')
+    def endContest(self):
+        winnerAddress = self.poll.endContest(_params(self.pollCreatorAddress)).return_value
+        print(f'Vinner: {winnerAddress}')
+        return winnerAddress
+
+    def deletePoll(self):
+        self.poll.deletePoll(_params(self.pollCreatorAddress))
+        print('Poll deleted!')

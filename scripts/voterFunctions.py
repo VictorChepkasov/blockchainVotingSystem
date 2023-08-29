@@ -1,23 +1,27 @@
-from brownie import Voter
 from .VotingSystemFunctions import _params
 
-def getVoterInfo(_from, voter):
-    voterInfo = voter.getVoterInfo(_params(_from))
-    print(f'Voter info: {voterInfo}')
-    return voterInfo
+class Voter:
+    def __init__(self, _voter):
+        self.voter = _voter
+        self.voterAddress = _voter.getVoterInfo()[0]
 
-def joinPoll(_from, voter, poll):
-    voter.joinPoll(poll, _params(_from))
-    print('Voter joined!')
+    def getVoterInfo(self):
+        voterInfo = self.voter.getVoterInfo(_params(self.voterAddress))
+        print(f'Voter info: {voterInfo}')
+        return voterInfo
 
-def setInviteContestant(_from, voter, poll):
-    voter.setInviteContestant(poll, _params(_from))
-    print('Invite saved, add new contestant!')
+    def joinPoll(self, poll):
+        self.voter.joinPoll(poll, _params(self.voterAddress))
+        print('Voter joined!')
 
-def vote(_from, contestantId, voter, poll):
-    voter.vote(poll, contestantId, _params(_from))
-    print(f'Voter voted for contestant id:{contestantId}')
+    def setInviteContestant(self, poll):
+        self.voter.setInviteContestant(poll, _params(self.voterAddress))
+        print('Invite saved, add new contestant!')
 
-def deleteVoter(_from, voter):
-    voter.deleteVoter(_params(_from))
-    print('Voter deleted!')
+    def vote(self, contestantId, poll):
+        self.voter.vote(poll, contestantId, _params(self.voterAddress))
+        print(f'Voter voted for contestant id:{contestantId}')
+
+    def deleteVoter(self):
+        self.voter.deleteVoter(_params(self.voterAddress))
+        print('Voter deleted!')
