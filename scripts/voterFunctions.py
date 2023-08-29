@@ -1,4 +1,4 @@
-from .VotingSystemFunctions import _params
+from .votingSystemFunctions import _params
 
 class Voter:
     def __init__(self, _voter):

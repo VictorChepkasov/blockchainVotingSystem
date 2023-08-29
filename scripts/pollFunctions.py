@@ -1,4 +1,4 @@
-from .VotingSystemFunctions import _params
+from .votingSystemFunctions import _params
 
 class Poll:
     def __init__(self, _poll):

@@ -4,7 +4,7 @@ from brownie import accounts, chain, VotingSystem
 from conftest import votingSystemContract
 from scripts.pollFunctions import *
 from scripts.voterFunctions import *
-from scripts.VotingSystemFunctions import _params, getPoll, getVoter, createVoter
+from scripts.votingSystemFunctions import _params, getPoll, getVoter, createVoter
 
 def randInt():
     return randint(5, 8)

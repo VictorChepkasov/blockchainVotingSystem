@@ -3,7 +3,7 @@ from brownie import accounts, chain
 from conftest import votingSystemContract
 from scripts.voterFunctions import *
 from scripts.pollFunctions import *
-from scripts.VotingSystemFunctions import (
+from scripts.votingSystemFunctions import (
     getVoter,
     getPoll,
     createVoter,

@@ -71,6 +71,10 @@ contract VotingSystem is CloneFactory {
         return voters[voterId];
     }
 
+    /*
+    * @dev msg.sender mustn't created
+    * @return user id
+    */
     function createVoter() public returns(uint voterId) {
         require(voterCreated[msg.sender] == 0, "Voter created!");
         voterId = ++countOfUsers;
@@ -82,6 +86,11 @@ contract VotingSystem is CloneFactory {
         emit CreateVoter(msg.sender, voterId, block.timestamp);
     }
 
+    /*
+    * @dev msg.sender mustn't created
+    * @param title can't be empty string
+    * @return poll id
+    */
     function createPoll(string memory title) public returns(uint pollId) {
         require(bytes(title).length > 0, "Title can't be empty!");
         pollId = ++countOfPolls;
