@@ -7,7 +7,7 @@ contract Voter {
     struct VoterInfo {
         address voter;
         uint id;
-        uint[] polls; // id голосований, в которых участвовал
+        uint[] polls; //id of the votes in which he participated
         bool exist;
     }
 
@@ -33,12 +33,19 @@ contract Voter {
         return voter;
     }
 
+    /*
+    * @param poll not started
+    */
     function joinPoll(Poll poll) public onlyExistedVoter {
         Poll.PollInfo memory pollInfo = poll.getPollInfo();
         require(pollInfo.dateOfStart > 0, "Poll not started!");
         poll.joinPoll(voter.id, msg.sender);
     }
 
+    /*
+    * @dev Allows the invited user to become a poll contestant
+    * @param poll mustn't be started and exist
+    */
     function setInviteContestant(Poll poll) public onlyExistedVoter {
         require(poll.invited(voter.id), "Only invited!");
         require(
@@ -50,6 +57,11 @@ contract Voter {
         voter.polls.push(pollInfo.id);
     }
 
+    /*
+    * @dev vote for a transferred member in a dedicated poll
+    * @param poll mustn't be started and exist
+    * @param contestantId must contestant in the poll
+    */
     function vote(Poll poll, uint contestantId) public onlyExistedVoter {
         Poll.PollInfo memory pollInfo = poll.getPollInfo();
         require(pollInfo.exist, "Poll not found!");

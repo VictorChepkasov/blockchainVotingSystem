@@ -3,7 +3,7 @@ pragma solidity >=0.8.10 <0.9.0;
 
 import "./Voter.sol";
 
-// clone factory copy-pasted by github.com/optionality
+// @notice clone-factory copy-pasted by github.com/optionality
 contract CloneFactory {
     function createClone(address target) internal returns (address result) {
         bytes20 targetBytes = bytes20(target);
@@ -34,20 +34,30 @@ contract CloneFactory {
     }
 }
 
+/*
+* @author Victor
+* @notice Creates a clone-factory Poll and a clone-factory Voter
+*/
 contract VotingSystem is CloneFactory {
     address pollMasterContract;
     address voterMasterContract;
     uint public countOfPolls;
     uint public countOfUsers;
 
-    mapping(uint => Voter) voters; //адресса всех пользователей
-    // адрес пользователя => его айди. Для проверки и не только
+    //@dev poll id => poll contract
+    mapping(uint => Poll) polls;
+    //@dev voter id => voter contract
+    mapping(uint => Voter) voters;
+    //@dev voter address => voter id
     mapping(address => uint) public voterCreated;
-    mapping(uint => Poll) polls; //все голосования 
     
     event CreatePoll(address indexed creator, string title, uint dateOfCreate);
     event CreateVoter(address indexed voter, uint voterId, uint dateOfCreate);
 
+    /* 
+    * @param _pollMasterContract for clone-factory polls
+    * @param _voterMasterContract for clone-factory voters
+    */ 
     constructor(address _pollMasterContract, address _voterMasterContract) {
         pollMasterContract = _pollMasterContract;
         voterMasterContract = _voterMasterContract;
